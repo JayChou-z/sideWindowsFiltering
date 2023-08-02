@@ -88,22 +88,14 @@ class sideWinFiltering(nn.Module):
             res[:, ch, :, :] = im_ch
         return res
 
-def uint8_py(number):
-    if number<0:
-        number=0
-    elif number>255:
-        number=255
-    else:
-        number=round(number)
-    return number
-# from PIL import Image
-# img = Image.open('six.bmp')
+
+
 img=cv2.imread('0019.bmp')
 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 radius = 3
 iteration = 10
 img1=img.astype(np.float32)
-# img1=np.array(img,dtype=np.float32)
+
 imgt=np.transpose(img1,(2,0,1))[None,:,:,:]
 img2 = torch.tensor(imgt, dtype=torch.float32)
 
@@ -116,20 +108,14 @@ if res.size(1) == 3:
 else:
     img_res1 = np.squeeze(res.data.numpy())
 
-for i in range(img_res1.shape[2]):
-    for j in range(img_res1.shape[1]):
-        for k in range(img_res1.shape[0]):
-            img_res1[k,j,i]=uint8_py(img_res1[k,j,i])
 
+img_res1=np.clip(img_res1,0,255)
 winname = 'window'
-# img=img.astype(np.float32)
-# img_res1 = np.abs(img1-img_res1)
+
 img_res2 = img_res1.astype(np.uint8)
-# img_res21=img1-img_res1
+
 cv2.namedWindow(winname, cv2.WINDOW_KEEPRATIO)
 cv2.imshow(winname,img_res2)
 cv2.waitKey(0)
 
 
-# img_res3 = Image.fromarray(img_res2)  # numpy to image
-# img_res3.show()
